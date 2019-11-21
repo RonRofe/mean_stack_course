@@ -1,6 +1,7 @@
 <textarea
     rows="6"
-    [value]="newPost"></textarea>
+    [value]="newPost"
+    #postInput></textarea>
 <hr>
-<button (click)="onAddPost()">Save Post</button>
+<button (click)="onAddPost(postInput)">Save Post</button>
 <p>{{ newPost }}</p>
