@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-post-list',
@@ -12,7 +12,7 @@ export class PostListComponent {
     //     {title: 'First Post', content: 'This is the first post\'s content'}
     // ];
 
-    public posts: {title: string, content: string}[] = [];
+    @Input() public posts: {title: string, content: string}[] = [];
 
     public get showPosts(): boolean {
         return this.posts.length > 0;
