@@ -10,7 +10,7 @@ app.use('/api/posts', (req, res, next) => {
             content: 'This is coming from ther server'
         },
         {
-            id: '123456sfdgds',
+            id: '12345asdsad6sfdgds',
             title: 'Second server-side post',
             content: 'This is coming from ther server!'
         }
