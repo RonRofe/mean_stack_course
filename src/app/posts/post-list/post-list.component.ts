@@ -34,4 +34,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     public get showPosts(): boolean {
         return this.posts.length > 0;
     }
+
+    public onDelete(postId: string): void {
+        this.postsService.deletePost(postId);
+    }
 }
