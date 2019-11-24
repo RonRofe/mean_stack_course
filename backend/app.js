@@ -6,7 +6,7 @@ const { Post } = require('./models/post')
 const app = express();
 
 mongoose.connect(
-    'mongodb+srv://rapitec:diGJCZgj3PvNJh0t@cluster0-gmdpj.mongodb.net/test?retryWrites=true&w=majority',
+    'mongodb+srv://rapitec:diGJCZgj3PvNJh0t@cluster0-gmdpj.mongodb.net/node-angular?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(() => {
     console.log('Connected to database successfully!');
@@ -29,34 +29,31 @@ app.use((req, res, next) => {
     next();
 })
 
-app.post('/api/posts', (req, res, next) => {
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content
-    });
-    console.log(post);
-    res.status(201).json({
-        message: 'Post added successfully'
-    });
+app.post('/api/posts', async (req, res, next) => {
+    try {
+        const post = new Post({
+            title: req.body.title,
+            content: req.body.content
+        });
+        await post.save();
+        res.status(201).json({
+            message: 'Post added successfully'
+        });
+    } catch(e) {
+
+    }
 });
 
-app.get('/api/posts', (req, res, next) => {
-    const posts = [
-        {
-            id: '123456sfdgds',
-            title: 'First server-side post',
-            content: 'This is coming from ther server'
-        },
-        {
-            id: '12345asdsad6sfdgds',
-            title: 'Second server-side post',
-            content: 'This is coming from ther server!'
-        }
-    ];
-    res.status(200).json({
-        message: 'Posts fetched successfully!',
-        posts
-    });
+app.get('/api/posts', async (req, res, next) => {
+    try {
+        const posts = await Post.find();
+        res.status(200).json({
+            message: 'Posts fetched successfully!',
+            posts
+        });
+    } catch(e) {
+
+    }
 });
 
 module.exports = app;
