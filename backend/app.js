@@ -35,9 +35,10 @@ app.post('/api/posts', async (req, res, next) => {
             title: req.body.title,
             content: req.body.content
         });
-        await post.save();
+        const postId = await post.save();
         res.status(201).json({
-            message: 'Post added successfully'
+            message: 'Post added successfully',
+            postId: postId._id
         });
     } catch(e) {
 
