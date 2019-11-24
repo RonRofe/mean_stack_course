@@ -1,4 +1,5 @@
-<mat-accordion multi="true" *ngIf="showPosts">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="showPosts && !isLoading">
     <mat-expansion-panel *ngFor="let post of posts">
         <mat-expansion-panel-header>
             {{ post.title }}
@@ -16,4 +17,4 @@
         </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>
-<p class="info-text mat-body-1" *ngIf="!showPosts">No posts added yet!</p>
+<p class="info-text mat-body-1" *ngIf="!showPosts && !isLoading">No posts added yet!</p>
