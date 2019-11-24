@@ -1,8 +1,18 @@
 const express = require('express');
+const mongoose = require('mongoose')
 
 const { Post } = require('./models/post')
 
 const app = express();
+
+mongoose.connect(
+    'mongodb+srv://rapitec:diGJCZgj3PvNJh0t@cluster0-gmdpj.mongodb.net/test?retryWrites=true&w=majority',
+    { useNewUrlParser: true, useUnifiedTopology: true }
+).then(() => {
+    console.log('Connected to database successfully!');
+}).catch(() => {
+    console.log('Database connection failed!');
+});
 
 app.use(express.json());
 
@@ -18,7 +28,7 @@ app.use((req, res, next) => {
     );
     next();
 })
-//diGJCZgj3PvNJh0t
+
 app.post('/api/posts', (req, res, next) => {
     const post = new Post({
         title: req.body.title,
