@@ -35,6 +35,10 @@ export class PostsService {
         return this.postsUpdated.asObservable();
     }
 
+    public getPost(id: string): Observable<BackendPost> {
+        return this.http.get<BackendPost>('http://localhost:3000/api/posts/' + id);
+    }
+
     public addPost(title: string, content: string): void {
         const post: Post = {title: title, content: content, id: null};
         this.http.post<{ message: string, postId: string }>('http://localhost:3000/api/posts', post)
@@ -45,6 +49,18 @@ export class PostsService {
             });
     }
     
+    public updatePost(id: string, title: string, content: string): void {
+        const post: Post = { id, title, content };
+        this.http.patch('http://localhost:3000/api/posts/' + id, post)
+            .subscribe(() => {
+                const updatedPosts = [...this.posts];
+                const oldPostIndex = updatedPosts.findIndex((p: Post) => p.id === post.id);
+                updatedPosts[oldPostIndex] = post;
+                this.posts = updatedPosts;
+                this.postsUpdated.next(updatedPosts);
+            });
+    }
+
     public deletePost(postId: string) {
         this.http.delete('http://localhost:3000/api/posts/' + postId)
             .subscribe(() => {
