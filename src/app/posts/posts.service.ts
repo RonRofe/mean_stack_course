@@ -39,14 +39,21 @@ export class PostsService {
         return this.http.get<BackendPost>('http://localhost:3000/api/posts/' + id);
     }
 
-    public addPost(title: string, content: string): void {
-        const post: Post = {title: title, content: content, id: null};
-        this.http.post<{ message: string, postId: string }>('http://localhost:3000/api/posts', post)
-            .subscribe((responseData: { message: string, postId: string }) => {
+    public addPost(title: string, content: string, image: File): void {
+        const postData = new FormData();
+        postData.append('title', title);
+        postData.append('content', content);
+        postData.append('image', image, title);
+
+        this.http.post<{ message: string, postId: string }>(
+            'http://localhost:3000/api/posts',
+            postData
+        ).subscribe((responseData: { message: string, postId: string }) => {
+                const post: Post = { id: responseData.postId, title, content }
                 post.id = responseData.postId;
                 this.posts.push(post);
                 this.postsUpdated.next([...this.posts]);
-            });
+        });
     }
     
     public updatePost(id: string, title: string, content: string): void {

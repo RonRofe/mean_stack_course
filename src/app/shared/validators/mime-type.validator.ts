@@ -1,7 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 
-export const mineType = (
+export const mimeType = (
     control: AbstractControl
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> =>
 {
@@ -28,7 +28,7 @@ export const mineType = (
             if(isValid) {
                 observer.next(null);
             } else {
-                observer.next({ invalidMineType: true });
+                observer.next({ InvalidMimeType: true });
             }
             observer.complete();
         };

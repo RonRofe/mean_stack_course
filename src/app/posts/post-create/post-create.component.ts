@@ -4,7 +4,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { Post, BackendPost } from 'src/app/shared/models/post.model';
 
-import { mineType } from 'src/app/shared/validators/mine-type.validator';
+import { mimeType } from 'src/app/shared/validators/mime-type.validator';
 
 import { PostsService } from '../posts.service';
 
@@ -45,7 +45,7 @@ export class PostCreateComponent implements OnInit {
             }),
             'image': new FormControl(null, {
                 validators: [Validators.required],
-                asyncValidators: [mineType]
+                asyncValidators: [mimeType]
             })
         });
 
@@ -79,7 +79,7 @@ export class PostCreateComponent implements OnInit {
         }
         this.isLoading = true;
         if(this.mode === 'create') {
-            await this.postsService.addPost(this.form.value.title, this.form.value.content);
+            await this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
         } else {
             await this.postsService.updatePost(this.postId, this.form.value.title, this.form.value.content);
         }
