@@ -37,7 +37,9 @@ export class PostsService {
     }
 
     public getPost(id: string): Observable<BackendPost> {
-        return this.http.get<BackendPost>('http://localhost:3000/api/posts/' + id);
+        return this.http.get<BackendPost>(
+            'http://localhost:3000/api/posts/' + id
+        );
     }
 
     public addPost(title: string, content: string, image: File): void {
@@ -46,12 +48,12 @@ export class PostsService {
         postData.append('content', content);
         postData.append('image', image, title);
 
-        this.http.post<{ message: string, post: Post }>(
+        this.http.post<{ message: string, post: BackendPost }>(
             'http://localhost:3000/api/posts',
             postData
-        ).subscribe((responseData: { message: string, post: Post }) => {
+        ).subscribe((responseData: { message: string, post: BackendPost }) => {
                 const post: Post = {
-                    id: responseData.post.id,
+                    id: responseData.post._id,
                     title,
                     content,
                     imagePath: responseData.post.imagePath
@@ -61,12 +63,32 @@ export class PostsService {
         });
     }
     
-    public updatePost(id: string, title: string, content: string): void {
-        const post: Post = { id, title, content, imagePath: null };
-        this.http.patch('http://localhost:3000/api/posts/' + id, post)
-            .subscribe(() => {
+    public updatePost(id: string, title: string, content: string, image: File | string): void {
+        let postData: FormData | Post;
+        if(typeof(image) === 'object') {
+            postData = new FormData();
+            postData.append('id', id);
+            postData.append('title', title);
+            postData.append('content', content);
+            postData.append('image', image, title);
+        } else {
+            postData = {
+                id,
+                title,
+                content,
+                imagePath: image
+            };
+        }
+        this.http.patch('http://localhost:3000/api/posts/' + id, postData)
+            .subscribe((response: BackendPost) => {
                 const updatedPosts = [...this.posts];
-                const oldPostIndex = updatedPosts.findIndex((p: Post) => p.id === post.id);
+                const oldPostIndex = updatedPosts.findIndex((p: Post) => p.id === id);
+                const post: Post = {
+                    id,
+                    title,
+                    content,
+                    imagePath: response.imagePath
+                };
                 updatedPosts[oldPostIndex] = post;
                 this.posts = updatedPosts;
                 this.postsUpdated.next(updatedPosts);
