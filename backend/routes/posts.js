@@ -69,16 +69,21 @@ router.patch('/:id', multer({ storage }).single('image'), async (req, res, next)
     }
 });
 
-router.get('', async (req, res, next) => {
-    try {
-        const posts = await Post.find();
+router.get('', (req, res, next) => {
+    const pageSize = +req.query.pageSize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find();
+    if(pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage + 1))
+            .limit(pageSize);
+    }
+    postQuery.then(posts => {
         res.status(200).json({
             message: 'Posts fetched successfully!',
             posts
         });
-    } catch(e) {
-
-    }
+    });
 });
 
 router.get('/:id', async(req, res, next) => {
