@@ -8,7 +8,8 @@ import {
   MatButtonModule,
   MatToolbarModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatPaginatorModule
 } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -39,6 +40,7 @@ import { PostsService } from './posts/posts.service';
     MatToolbarModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
     HttpClientModule
   ],
   providers: [PostsService],
