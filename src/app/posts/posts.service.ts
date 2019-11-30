@@ -14,8 +14,9 @@ export class PostsService {
         private http: HttpClient
     ) {}
 
-    public getPosts(): void {
-        this.http.get<{ message: string, posts: BackendPost[] }>('http://localhost:3000/api/posts')
+    public getPosts(postsPerPage: number, currentPage: number): void {
+        const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
+        this.http.get<{ message: string, posts: BackendPost[] }>('http://localhost:3000/api/posts' + queryParams)
             .pipe(map((postData: { message: string, posts: BackendPost[] }) => {
                 return postData.posts.map((post: BackendPost) => {;
                     return {
