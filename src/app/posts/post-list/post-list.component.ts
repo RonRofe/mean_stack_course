@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Post } from '../../shared/models/post.model';
 
 import { PostsService } from '../posts.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
     selector: 'app-post-list',
@@ -12,16 +13,20 @@ import { PostsService } from '../posts.service';
     styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit, OnDestroy {
-    private posts: Post[] = [];
     public isLoading: boolean = false;
     public totalPosts: number = 0;
     public postsPerPage: number = 2;
     public currentPage: number = 1;
     public pageSizeOptions: number[] = [1, 2, 5, 10];
+    public isAuthenticated: boolean = false;
+    
+    private posts: Post[] = [];
     private postsSubscription: Subscription;
+    private authListenerSubscription: Subscription;
 
     constructor(
-        public postsService: PostsService
+        public postsService: PostsService,
+        private authService: AuthService
     ) {}
 
     ngOnInit() {
@@ -34,10 +39,17 @@ export class PostListComponent implements OnInit, OnDestroy {
                 this.posts = posts;
             }
         );
+        this.isAuthenticated = this.authService.getIsAuth();
+        this.authListenerSubscription = this.authService
+            .getAuthStatusListener()
+            .subscribe((isAuthenticated) => {
+                this.isAuthenticated = isAuthenticated;
+            });
     }
 
     ngOnDestroy() {
         this.postsSubscription.unsubscribe();
+        this.authListenerSubscription.unsubscribe();
     }
 
     public get showPosts(): boolean {
