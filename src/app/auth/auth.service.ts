@@ -34,18 +34,19 @@ export class AuthService {
         ).subscribe();
     }
 
-    public login(email: string, password: string): void {
+    public async login(email: string, password: string): Promise<boolean> {
         const authData: AuthData = { email, password };
-        this.http.post<{ token: string }>(
+        await this.http.post<{ token: string }>(
             'http://localhost:3000/api/user/login',
             authData
         ).subscribe(({ token }: { token: string }) => {
             this.token = token;
             if(token) {
                 this.isAuthenticated = true;
+                this.authStatusListener.next(true);
             }
-            this.authStatusListener.next(true);
         });
+        return this.isAuthenticated;
     }
 
     public logout(): void {
