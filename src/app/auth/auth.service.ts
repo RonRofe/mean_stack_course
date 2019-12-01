@@ -5,9 +5,15 @@ import { AuthData } from './auth-data.model';
 
 @Injectable()
 export class AuthService {
+    private token: string;
+
     constructor(
         private http: HttpClient
     ) {}
+
+    public getToken(): string {
+        return this.token;
+    }
 
     public createUser(email: string, password: string): void {
         const authData: AuthData = { email, password };
@@ -19,9 +25,11 @@ export class AuthService {
 
     public login(email: string, password: string): void {
         const authData: AuthData = { email, password };
-        this.http.post(
+        this.http.post<{ token: string }>(
             'http://localhost:3000/api/user/login',
             authData
-        ).subscribe();
+        ).subscribe(({ token }: { token: string }) => {
+            this.token = token;
+        });
     }
 }
