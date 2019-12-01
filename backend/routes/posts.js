@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 
 const { Post } = require('../models/post');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post('', multer({ storage }).single('image'), async (req, res, next) => {
+router.post('', auth, multer({ storage }).single('image'), async (req, res, next) => {
     try {
         const url = req.protocol + '://' + req.get('host');
         const post = new Post({
@@ -49,7 +50,7 @@ router.post('', multer({ storage }).single('image'), async (req, res, next) => {
     }
 });
 
-router.patch('/:id', multer({ storage }).single('image'), async (req, res, next) => {
+router.patch('/:id', auth, multer({ storage }).single('image'), async (req, res, next) => {
     let imagePath = req.body.imagePath;
     if(req.file) {
         const url = req.protocol + '://' + req.get('host');
@@ -100,7 +101,7 @@ router.get('/:id', async(req, res, next) => {
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', auth, async (req, res, next) => {
     try {
         await Post.deleteOne({ _id: req.params.id });
         res.status(200).json({ message: 'Post deleted!' });
