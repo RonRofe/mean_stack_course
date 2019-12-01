@@ -8,7 +8,7 @@ import { AuthData } from './auth-data.model';
 export class AuthService {
     private token: string;
     private isAuthenticated: boolean = false;
-    private authServiceListener: Subject<boolean> = new Subject<boolean>();
+    private authStatusListener: Subject<boolean> = new Subject<boolean>();
 
     constructor(
         private http: HttpClient
@@ -23,7 +23,7 @@ export class AuthService {
     }
 
     public getAuthStatusListener(): Observable<boolean> {
-        return this.authServiceListener.asObservable();
+        return this.authStatusListener.asObservable();
     }
 
     public createUser(email: string, password: string): void {
@@ -44,7 +44,13 @@ export class AuthService {
             if(token) {
                 this.isAuthenticated = true;
             }
-            this.authServiceListener.next(true);
+            this.authStatusListener.next(true);
         });
+    }
+
+    public logout(): void {
+        this.token = null;
+        this.isAuthenticated = false;
+        this.authStatusListener.next(false);
     }
 }
