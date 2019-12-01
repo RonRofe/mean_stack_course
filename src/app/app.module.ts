@@ -23,6 +23,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 
 import { PostsService } from './posts/posts.service';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { PostsService } from './posts/posts.service';
     MatPaginatorModule,
     HttpClientModule
   ],
-  providers: [PostsService],
+  providers: [PostsService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
