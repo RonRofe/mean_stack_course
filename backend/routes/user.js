@@ -40,7 +40,7 @@ router.post('/login', async (req, res, next) => {
             'secret_this_should_be_longer',
             { expiresIn: '1h' }
         );
-        res.status(200).json({ token });
+        res.status(200).json({ token, expiresI: 3600 });
     } catch(error) {
 
     }

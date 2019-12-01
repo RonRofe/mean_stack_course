@@ -9,6 +9,7 @@ export class AuthService {
     private token: string;
     private isAuthenticated: boolean = false;
     private authStatusListener: Subject<boolean> = new Subject<boolean>();
+    private tokenTimer: any;
 
     constructor(
         private http: HttpClient
@@ -36,12 +37,15 @@ export class AuthService {
 
     public async login(email: string, password: string): Promise<boolean> {
         const authData: AuthData = { email, password };
-        await this.http.post<{ token: string }>(
+        await this.http.post<{ token: string, expiresIn: number }>(
             'http://localhost:3000/api/user/login',
             authData
-        ).subscribe(({ token }: { token: string }) => {
+        ).subscribe(({ token, expiresIn }: { token: string, expiresIn: number }) => {
             this.token = token;
             if(token) {
+                this.tokenTimer = setTimeout(() => {
+                    this.logout();
+                }, expiresIn * 1000);
                 this.isAuthenticated = true;
                 this.authStatusListener.next(true);
             }
@@ -53,5 +57,6 @@ export class AuthService {
         this.token = null;
         this.isAuthenticated = false;
         this.authStatusListener.next(false);
+        clearTimeout(this.tokenTimer);
     }
 }
