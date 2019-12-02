@@ -55,7 +55,7 @@ export class PostsService {
         this.http.post<{ message: string, post: BackendPost }>(
             'http://localhost:3000/api/posts',
             postData
-        );
+        ).subscribe();
     }
     
     public updatePost(id: string, title: string, content: string, image: File | string): void {
@@ -76,7 +76,7 @@ export class PostsService {
                 creator: null
             };
         }
-        this.http.patch('http://localhost:3000/api/posts/' + id, postData);
+        this.http.patch('http://localhost:3000/api/posts/' + id, postData).subscribe();
     }
 
     public deletePost(postId: string) {
