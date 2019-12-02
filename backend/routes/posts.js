@@ -58,14 +58,19 @@ router.patch('/:id', auth, multer({ storage }).single('image'), async (req, res,
         imagePath = url + '/images/' + req.file.filename;
     }
     try {
-        const newPost = await Post.updateOne({
-            _id: req.params.id
+        const result = await Post.updateOne({
+            _id: req.params.id,
+            creator: req.userData.userId
         }, {
             title: req.body.title,
             content: req.body.content,
             imagePath
         });
-        res.status(200).json({ message: 'Update successful!' })
+        if(result.n > 0) {
+            res.status(200).json({ message: 'Update successful!' })
+        } else {
+            res.status(401).json({ message: 'Not authorized!' })
+        }
     } catch(e) {
 
     }
@@ -104,8 +109,12 @@ router.get('/:id', async(req, res, next) => {
 
 router.delete('/:id', auth, async (req, res, next) => {
     try {
-        await Post.deleteOne({ _id: req.params.id });
-        res.status(200).json({ message: 'Post deleted!' });
+        const result = await Post.deleteOne({ _id: req.params.id, creator: req.userData.userId });
+        if(result.n > 0) {
+            res.status(200).json({ message: 'Post deleted!' });
+        } else {
+            res.status(401).json({ message: 'Not authorized!' });
+        }
     } catch(e) {
 
     }
