@@ -66,12 +66,14 @@ export class PostsService {
             postData.append('title', title);
             postData.append('content', content);
             postData.append('image', image, title);
+            postData.append('creator', null);
         } else {
             postData = {
                 id,
                 title,
                 content,
-                imagePath: image
+                imagePath: image,
+                creator: null
             };
         }
         this.http.patch('http://localhost:3000/api/posts/' + id, postData);
