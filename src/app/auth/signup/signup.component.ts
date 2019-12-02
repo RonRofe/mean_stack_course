@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
     styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent {
-    private isLoading: boolean = false;
+    public isLoading: boolean = false;
 
     constructor(
         public authService: AuthService

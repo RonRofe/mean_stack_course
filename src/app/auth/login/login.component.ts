@@ -12,21 +12,17 @@ export class LoginComponent {
     public isLoading: boolean = false;
 
     constructor(
-        private authService: AuthService,
-        private router: Router
+        private authService: AuthService
     ) {}
 
-    public async onLogin(form: NgForm): Promise<void> {
+    public onLogin(form: NgForm): void {
         if(form.invalid) {
             return;
         }
         
         this.isLoading = true;
-        const isLoginSucceed: boolean = await this.authService.login(
+        this.authService.login(
             form.value.email, form.value.password
         );
-        if(isLoginSucceed) {
-            this.router.navigate(['/']);
-        }
     }
 }
