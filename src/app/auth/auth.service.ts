@@ -41,7 +41,7 @@ export class AuthService {
             authData
         ).subscribe(() => {
             this.router.navigate(['/']);
-        }, error => {
+        }, () => {
             this.authStatusListener.next(false);
         });
     }
