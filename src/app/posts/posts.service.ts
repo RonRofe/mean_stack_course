@@ -21,8 +21,8 @@ export class PostsService {
         ).pipe(map(
             (postData: { message: string, posts: BackendPost[], maxPosts: number }) => {
                 const posts = postData.posts.map(
-                    ({ _id, title, content, imagePath }: BackendPost) => {
-                        return { id: _id, title, content, imagePath };
+                    ({ _id, title, content, imagePath, creator }: BackendPost) => {
+                        return { id: _id, title, content, imagePath, creator };
                     }
                 );
                 return { posts, maxPosts: postData.maxPosts };

@@ -35,7 +35,8 @@ router.post('', auth, multer({ storage }).single('image'), async (req, res, next
         const post = new Post({
             title: req.body.title,
             content: req.body.content,
-            imagePath: url + '/images/' + req.file.filename
+            imagePath: url + '/images/' + req.file.filename,
+            creator: req.userData.userId
         });
         const createdPost = await post.save();
         res.status(201).json({
