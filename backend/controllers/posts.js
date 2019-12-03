@@ -58,7 +58,7 @@ const getPosts = (req, res, next) => {
     }
     postQuery.then(fetchedPosts => {
         posts = fetchedPosts;
-        return Post.count();
+        return Post.countDocuments();
     }).then(maxPosts => {
         res.status(200).json({
             message: 'Posts fetched successfully!',
