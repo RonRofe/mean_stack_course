@@ -5,6 +5,10 @@ import { map } from 'rxjs/operators';
 
 import { Post, BackendPost } from '../shared/models/post.model';
 
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/posts/';
+
 @Injectable()
 export class PostsService {
     private posts: Post[] = [];
@@ -17,7 +21,7 @@ export class PostsService {
     public getPosts(postsPerPage: number, currentPage: number): void {
         const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
         this.http.get<{ message: string, posts: BackendPost[], maxPosts: number }>(
-            'http://localhost:3000/api/posts' + queryParams
+            BACKEND_URL + queryParams
         ).pipe(map(
             (postData: { message: string, posts: BackendPost[], maxPosts: number }) => {
                 const posts = postData.posts.map(
@@ -41,9 +45,7 @@ export class PostsService {
     }
 
     public getPost(id: string): Observable<BackendPost> {
-        return this.http.get<BackendPost>(
-            'http://localhost:3000/api/posts/' + id
-        );
+        return this.http.get<BackendPost>(BACKEND_URL + id);
     }
 
     public addPost(title: string, content: string, image: File): void {
@@ -53,12 +55,16 @@ export class PostsService {
         postData.append('image', image, title);
 
         this.http.post<{ message: string, post: BackendPost }>(
-            'http://localhost:3000/api/posts',
-            postData
+            BACKEND_URL, postData
         ).subscribe();
     }
     
-    public updatePost(id: string, title: string, content: string, image: File | string): void {
+    public updatePost(
+        id: string,
+        title: string,
+        content: string,
+        image: File | string
+    ): void {
         let postData: FormData | Post;
         if(typeof(image) === 'object') {
             postData = new FormData();
@@ -76,10 +82,10 @@ export class PostsService {
                 creator: null
             };
         }
-        this.http.patch('http://localhost:3000/api/posts/' + id, postData).subscribe();
+        this.http.patch(BACKEND_URL + id, postData).subscribe();
     }
 
     public deletePost(postId: string) {
-        return this.http.delete('http://localhost:3000/api/posts/' + postId);
+        return this.http.delete(BACKEND_URL + postId);
     }
 }
