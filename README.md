@@ -12,3 +12,4 @@ This course aims to practice my Node.JS & Angular development skills and to enha
 - Authentication
 - JWT + bcrypt
 - Authorization
+- Lazy loading
