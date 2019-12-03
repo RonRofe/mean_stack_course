@@ -19,9 +19,7 @@ router.post('/signup', async (req, res, next) => {
             result
         });
     } catch(error) {
-        res.status(500).json({
-            error
-        });
+        res.status(500).json({ message: 'Invalid authentication cardntials!' });
     }
 });
 
@@ -43,7 +41,7 @@ router.post('/login', async (req, res, next) => {
         res.status(200).json({ token, expiresIn: 3600, userId: user._id });
     } catch(error) {
         return res.status(401).json({
-            message: 'Auth failed!'
+            message: 'Invalid authentication cardentials!'
         });
     }
 });

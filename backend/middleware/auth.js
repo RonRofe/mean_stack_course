@@ -7,7 +7,7 @@ const auth = (req, res, next) => {
         req.userData = { email, userId };
         next();
     } catch(e) {
-        res.status(401).json({ message: 'Auth failed!' });
+        res.status(401).json({ message: 'You are not authenticated!' });
     }
 }
 

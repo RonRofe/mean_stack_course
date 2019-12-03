@@ -30,8 +30,8 @@ const storage = multer.diskStorage({
 });
 
 router.post('', auth, multer({ storage }).single('image'), async (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
     try {
-        const url = req.protocol + '://' + req.get('host');
         const post = new Post({
             title: req.body.title,
             content: req.body.content,
@@ -47,7 +47,7 @@ router.post('', auth, multer({ storage }).single('image'), async (req, res, next
             }
         });
     } catch(e) {
-
+        res.status(500).json({ message: 'Creating a post failed!' });
     }
 });
 
@@ -66,13 +66,12 @@ router.patch('/:id', auth, multer({ storage }).single('image'), async (req, res,
             content: req.body.content,
             imagePath
         });
-        if(result.n > 0) {
-            res.status(200).json({ message: 'Update successful!' })
-        } else {
-            res.status(401).json({ message: 'Not authorized!' })
+        if(result.n <= 0) {
+            return res.status(401).json({ message: 'Not authorized!' })
         }
+        res.status(200).json({ message: 'Update successful!' });
     } catch(e) {
-
+        res.status(500).json({ message: 'Couldn\'nt update post!' });
     }
 });
 
@@ -95,28 +94,32 @@ router.get('', (req, res, next) => {
             posts,
             maxPosts
         });
+    }).catch(() => {
+        res.status(500).json({ message: 'Fetching posts failed!' });
     });
 });
 
 router.get('/:id', async(req, res, next) => {
-    const post = await Post.findById(req.params.id);
-    if(post) {
-        res.status(200).json(post);
-    } else {
+    try {
+        const post = await Post.findById(req.params.id);
+        if(post) {
+            return res.status(200).json(post);
+        }
         res.status(404).json({ message: 'Post not found!' });
+    } catch(e) {
+        res.status(500).json({ message: 'Fetching post failed!' });
     }
 });
 
 router.delete('/:id', auth, async (req, res, next) => {
     try {
         const result = await Post.deleteOne({ _id: req.params.id, creator: req.userData.userId });
-        if(result.n > 0) {
-            res.status(200).json({ message: 'Post deleted!' });
-        } else {
-            res.status(401).json({ message: 'Not authorized!' });
+        if(result.n <= 0) {
+            return res.status(401).json({ message: 'Not authorized!' });;
         }
+        res.status(200).json({ message: 'Post deleted!' });
     } catch(e) {
-
+        res.status(500).json({ message: 'Deleting post failed!' });
     }
 });
 
