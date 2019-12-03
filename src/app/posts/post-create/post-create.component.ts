@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Post, BackendPost } from 'src/app/shared/models/post.model';
 
 import { mimeType } from 'src/app/shared/validators/mime-type.validator';
 
 import { PostsService } from '../posts.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
     selector: 'app-post-create',
     templateUrl: './post-create.component.html',
     styleUrls: ['./post-create.component.scss']
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
     public enteredTitle: string = '';
     public enteredContent: string = '';
     public isLoading: boolean = false;
@@ -23,11 +25,13 @@ export class PostCreateComponent implements OnInit {
 
     private mode: 'create' | 'edit' = 'create';
     private postId: string;
+    private authStatusSubscription: Subscription;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        public postsService: PostsService
+        public postsService: PostsService,
+        public authService: AuthService
     ) {}
 
     ngOnInit() {
@@ -74,6 +78,15 @@ export class PostCreateComponent implements OnInit {
                 this.postId = null;
             }
         });
+
+        this.authStatusSubscription = this.authService
+            .getAuthStatusListener().subscribe(() => {
+                this.isLoading = false;
+            });
+    }
+
+    ngOnDestroy() {
+        this.authStatusSubscription.unsubscribe();
     }
 
     public onSavePost(): void {
