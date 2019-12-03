@@ -8,8 +8,12 @@ const { router: userRoutes } = require('./routes/user');
 const app = express();
 
 mongoose.connect(
-    'mongodb+srv://rapitec:diGJCZgj3PvNJh0t@cluster0-gmdpj.mongodb.net/node-angular?retryWrites=true&w=majority',
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
+    'mongodb+srv://rapitec:' + process.env.MONGO_ATLAS_PASSWORD + '@cluster0-gmdpj.mongodb.net/node-angular?retryWrites=true&w=majority',
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    }
 ).then(() => {
     console.log('Connected to database successfully!');
 }).catch(() => {
