@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "server-start": "node server.js",
-    "server-dev": "env-cmd -f ./config/dev.env nodemon server.js"
+    "server-start": "node backend/server.js",
+    "server-dev": "env-cmd -f ./backend/config/dev.env nodemon backend/server.js"
   },
   "private": true,
   "dependencies": {
