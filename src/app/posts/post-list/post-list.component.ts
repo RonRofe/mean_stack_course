@@ -20,8 +20,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     public pageSizeOptions: number[] = [1, 2, 5, 10];
     public isAuthenticated: boolean = false;
     public userId: string;
+    public posts: Post[] = [];
     
-    private posts: Post[] = [];
     private postsSubscription: Subscription;
     private authListenerSubscription: Subscription;
 

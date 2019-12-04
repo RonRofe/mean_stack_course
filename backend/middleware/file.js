@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
         const isValid = MIME_TYPE_MAP[file.mimetype];
 
         if(isValid) {
-            callback(undefined, './backend/images');
+            callback(undefined, './images');
         } else {
             callback(new Error('Invalid mine type'));
         }
